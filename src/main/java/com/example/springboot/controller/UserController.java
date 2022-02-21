@@ -20,15 +20,21 @@ public class UserController
     }
 
     @GetMapping()
-    public ResponseEntity<List<User>> getAll()
+    public ResponseEntity<Iterable<User>> getAll()
     {
         return ResponseEntity.ok(userService.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> get(@PathVariable ("id") int id)
+    public ResponseEntity<User> get(@PathVariable ("id") Long id)
     {
-        return ResponseEntity.ok(userService.getUserById(id).get());
+        return ResponseEntity.ok(userService.getUserById(id));
+    }
+
+    @GetMapping("?name")
+    public ResponseEntity<Iterable<User>> getAllUsersByName(@RequestParam(value = "name", required = true) String name)
+    {
+        return ResponseEntity.ok(userService.getUsersByName(name));
     }
 
     @PostMapping()
@@ -38,14 +44,16 @@ public class UserController
     }
 
     @PutMapping("/{id}")
-    public void updateUser(@PathVariable("id") int id, @RequestBody User user)
+    public void updateUser(@PathVariable("id") Long id, @RequestBody User user)
     {
         userService.updateUserById(id, user);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUserFromDB(@PathVariable("id") int id)
+    public void deleteUserFromDB(@PathVariable("id") Long id)
     {
         userService.deleteUserById(id);
     }
+
+
 }

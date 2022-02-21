@@ -1,58 +1,60 @@
 package com.example.springboot.service;
 
 import com.example.springboot.entity.User;
+import com.example.springboot.repository.UserRepository;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService
 {
-    List<User> userList = new ArrayList<>(
-            Arrays.asList(
-                    new User(1,"Vladislav","Trubicyn","maile"),
-                    new User(2, "Chiki", "Briki","iVDamke"),
-                    new User(3, "Anton", "Ahmetov","donsk@mylu.no"),
-                    new User(4, "Max", "Ahirov","dfsd")
-            )
-    );
+    private UserRepository userRepository;
 
-    public List<User> getAll()
+    public UserService(UserRepository userRepository)
     {
-        return userList;
+        this.userRepository = userRepository;
     }
 
-    public Optional<User> getUserById(int id)
+    public Iterable<User> getAll()
     {
-        return userList.stream().filter(user -> user.getId() == id).findFirst();
+        return userRepository.findAll();
+    }
+
+    public User getUserById(Long id)
+    {
+        return userRepository.findById(id).get();
     }
 
     public void save(User user)
     {
-        user.setId(userList.size()+1);
-        userList.add(user);
+        userRepository.save(user);
     }
 
-    public void updateUserById(int id, User user)
+    public void updateUserById(Long id, User user)
     {
-        User userFromDB = getUserById(id).get();
-        userFromDB.setUserName(user.getUserName());
-        userFromDB.setLastName(user.getLastName());
-        userFromDB.setEmail(user.getEmail());
-        userList.set(id, user);
-    }
-
-    public void deleteUserById(int id)
-    {
-        userList.remove(id-1);
-
-        for(int i = 0; i < userList.size(); i++)
+        User userFromDB = userRepository.findById(id).get();
+        if(!Strings.isEmpty(user.getUserName()))
         {
-            userList.get(i).setId(i+1);
+            userFromDB.setUserName(user.getUserName());
         }
+        if(!Strings.isEmpty(user.getLastName()))
+        {
+            userFromDB.setLastName(user.getLastName());
+        }
+        if(!Strings.isEmpty(user.getEmail()))
+        {
+            userFromDB.setEmail(user.getEmail());
+        }
+        userRepository.save(userFromDB);
     }
 
+    public void deleteUserById(Long id)
+    {
+        userRepository.deleteById(id);
+    }
+
+    public Iterable<User> getUsersByName(String name)
+    {
+        return userRepository.findAllByUserName(name);
+    }
 }

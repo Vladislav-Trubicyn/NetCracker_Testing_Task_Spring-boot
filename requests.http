@@ -6,14 +6,18 @@ Accept: application/json
 GET http://localhost:8080/user/1
 Accept: application/json
 
+### GET request getAllUsersByName
+GET http://localhost:8080/user?name=Gleb
+Accept: application/json
+
 ### POST create user
 POST http://localhost:8080/user
 Content-Type: application/json
 
 {
   "userName": "Gleb",
-  "lastName": "Makarovich",
-  "email": "asfsd"
+  "lastName": "Fedorovich",
+  "email": "gbfd@mail.ru"
 }
 
 ### PUT updateUserById
@@ -22,8 +26,8 @@ Content-Type: application/json
 
 {
   "userName": "Gleb",
-  "lastName": "Makarovich",
-  "email": "asfsd"
+  "lastName": "",
+  "email": "asdg@mail.ru"
 }
 
 ### DELETE request deleteUserById
